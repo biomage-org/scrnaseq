@@ -25,16 +25,13 @@ workflow MTX_CONVERSION {
             mtx_matrices
         )
 
-        //
-        // Convert h5ad files to 10x counts format
-        //
-        // if (!txp2gene) {
-        //     GENE_MAP( gtf )
-        //     txp2gene = GENE_MAP.out.gene_map
-        // }
+        // Generate the t2g file to enrich the 10x files with gene names
         KALLISTOBUSTOOLS_REF( genome_fasta, gtf, 'standard' )
         txp2gene = KALLISTOBUSTOOLS_REF.out.t2g.collect()
 
+        //
+        // Convert h5ad files to 10x counts format
+        //
         H5AD_TO_10X (
             MTX_TO_H5AD.out.h5ad, // gather all sample-specific files
             txp2gene

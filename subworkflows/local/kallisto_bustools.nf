@@ -67,8 +67,7 @@ workflow KALLISTO_BUSTOOLS {
     emit:
     ch_versions
     counts = KALLISTOBUSTOOLS_COUNT.out.count
-    t2g = KALLISTOBUSTOOLS_COUNT.out.t2g
-    matrix = KALLISTOBUSTOOLS_COUNT.out.matrix
-    barcodes = KALLISTOBUSTOOLS_COUNT.out.barcodes
-    features = KALLISTOBUSTOOLS_COUNT.out.features
+    txp2gene
+
+
 }

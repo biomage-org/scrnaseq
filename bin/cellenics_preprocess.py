@@ -24,11 +24,11 @@ def save_features(features):
 
 def transpose_matrix(path):
     with open(path, 'r') as matrix, open('matrix.mtx', 'w') as transposed:
-        transposed.write(matrix.readline())
-        transposed.write(matrix.readline())
-        transposed.write(matrix.readline())
-
         for line in matrix:
+            if line[0] == '%':
+                transposed.write(line)
+                continue
+
             values = line.split()
             transposed.write("{} {} {}\n".format(values[1], values[0], values[2]))
 

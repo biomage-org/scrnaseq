@@ -138,11 +138,10 @@ workflow SCRNASEQ {
         ch_mtx_matrices = ch_mtx_matrices.mix(KALLISTO_BUSTOOLS.out.counts)
 
         CELLENICS_PREPROCESS(
-            channel.fromPath("t2g.txt"),
-            KALLISTO_BUSTOOLS.out.counts,
-            "counts_unfiltered/cells_x_genes.mtx",
-            "counts_unfiltered/cells_x_genes.genes.txt",
-            "counts_unfiltered/cells_x_genes.barcodes.txt"
+            KALLISTO_BUSTOOLS.out.t2g,
+            KALLISTO_BUSTOOLS.out.matrix,
+            KALLISTO_BUSTOOLS.out.features,
+            KALLISTO_BUSTOOLS.out.barcodes
         )
 
         sample = CELLENICS_PREPROCESS.out.sample

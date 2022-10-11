@@ -16,9 +16,12 @@ process KALLISTOBUSTOOLS_COUNT {
     val   technology
 
     output:
+    path "t2g.txt"                   , emit: t2g
     tuple val(meta), path ("*.count"), emit: count
     path "versions.yml"              , emit: versions
     path "*.count/*/*.mtx"           , emit: matrix //Ensure that kallisto finished and produced outputs
+    path "*.count/*/*.barcodes.txt"  , emit: barcodes
+    path "*.count/*/*.genes.txt"     , emit: features
 
     when:
     task.ext.when == null || task.ext.when
@@ -47,5 +50,7 @@ process KALLISTOBUSTOOLS_COUNT {
     "${task.process}":
         kallistobustools: \$(echo \$(kb --version 2>&1) | sed 's/^.*kb_python //;s/positional arguments.*\$//')
     END_VERSIONS
+
+
     """
 }

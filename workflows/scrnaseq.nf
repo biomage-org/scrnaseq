@@ -45,6 +45,8 @@ include { STARSOLO          } from '../subworkflows/local/starsolo'
 include { CELLRANGER_ALIGN  } from "../subworkflows/local/align_cellranger"
 include { MTX_CONVERSION    } from "../subworkflows/local/mtx_conversion"
 include { GTF_GENE_FILTER   } from '../modules/local/gtf_gene_filter'
+include { CELLENICS_PREPROCESS } from '../modules/local/cellenics_preprocess'
+include { CELLENICS_UPLOAD } from '../modules/local/cellenics_upload'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -134,6 +136,19 @@ workflow SCRNASEQ {
         )
         ch_versions = ch_versions.mix(KALLISTO_BUSTOOLS.out.ch_versions)
         ch_mtx_matrices = ch_mtx_matrices.mix(KALLISTO_BUSTOOLS.out.counts)
+
+        CELLENICS_PREPROCESS(
+            "t2g.txt",
+            KALLISTO_BUSTOOLS.out.counts,
+            "counts_unfiltered/cells_x_genes.mtx",
+            "counts_unfiltered/cells_x_genes.genes.txt",
+            "counts_unfiltered/cells_x_genes.barcodes.txt"
+        )
+
+        sample = CELLENICS_PREPROCESS.out.sample
+
+        CELLENICS_UPLOAD(params.email, params.password, sample) |
+        view
     }
 
     // Run salmon alevin pipeline

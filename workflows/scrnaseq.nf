@@ -185,7 +185,10 @@ workflow SCRNASEQ {
     // Run mtx to h5ad conversion subworkflow
     MTX_CONVERSION (
         ch_mtx_matrices,
-        ch_input
+        ch_input,
+        ch_filter_gtf,
+        ch_txp2gene,
+
     )
 
     //Add Versions from MTX Conversion workflow too

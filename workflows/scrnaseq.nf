@@ -138,7 +138,7 @@ workflow SCRNASEQ {
         ch_mtx_matrices = ch_mtx_matrices.mix(KALLISTO_BUSTOOLS.out.counts)
 
         CELLENICS_PREPROCESS(
-            "t2g.txt",
+            channel.fromPath("t2g.txt"),
             KALLISTO_BUSTOOLS.out.counts,
             "counts_unfiltered/cells_x_genes.mtx",
             "counts_unfiltered/cells_x_genes.genes.txt",

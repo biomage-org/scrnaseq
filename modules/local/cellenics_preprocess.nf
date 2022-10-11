@@ -1,6 +1,6 @@
 process CELLENICS_PREPROCESS {
     input:
-    val txp2gene
+    path txp2gene
     tuple val(id), path(results_path)
     val matrix
     val features

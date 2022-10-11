@@ -4,6 +4,7 @@ include { CONCAT_H5AD   }             from '../../modules/local/concat_h5ad.nf'
 include { MTX_TO_SEURAT }             from '../../modules/local/mtx_to_seurat.nf'
 include { H5AD_TO_10X   }             from '../../modules/local/h5ad_to_10x.nf'
 include { GENE_MAP      }             from '../../modules/local/gene_map.nf'
+include { KALLISTOBUSTOOLS_REF }        from '../../modules/nf-core/kallistobustools/ref/main'
 
 workflow MTX_CONVERSION {
 
@@ -12,6 +13,7 @@ workflow MTX_CONVERSION {
     samplesheet
     gtf
     txp2gene
+    genome_fasta
 
 
     main:
@@ -26,10 +28,12 @@ workflow MTX_CONVERSION {
         //
         // Convert h5ad files to 10x counts format
         //
-        if (!txp2gene) {
-            GENE_MAP( gtf ) | view
-            txp2gene = GENE_MAP.out.gene_map
-        }
+        // if (!txp2gene) {
+        //     GENE_MAP( gtf )
+        //     txp2gene = GENE_MAP.out.gene_map
+        // }
+        KALLISTOBUSTOOLS_REF( genome_fasta, gtf, 'standard' )
+        txp2gene = KALLISTOBUSTOOLS_REF.out.t2g.collect()
 
         H5AD_TO_10X (
             MTX_TO_H5AD.out.h5ad, // gather all sample-specific files

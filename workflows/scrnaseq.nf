@@ -186,8 +186,9 @@ workflow SCRNASEQ {
     MTX_CONVERSION (
         ch_mtx_matrices,
         ch_input,
-        ch_filter_gtf,
+        ch_gtf,
         ch_txp2gene,
+        ch_genome_fasta
 
     )
 

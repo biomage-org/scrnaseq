@@ -36,10 +36,12 @@ process H5AD_TO_10X {
     //
     """
     # convert file types
+    sampleName=`basename ${h5ad_file} .h5ad`
+    mkdir -p "out/\${sampleName}"
     h5ad_to_10x.py \\
         --h5ad_file ${h5ad_file} \\
         --t2g_file ${t2g_file} \\
-        --out out
+        --out out/\${sampleName}
     """
 
     stub:

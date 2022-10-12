@@ -14,6 +14,7 @@ workflow MTX_CONVERSION {
     gtf
     txp2gene
     genome_fasta
+    output_10x
 
 
     main:
@@ -25,17 +26,19 @@ workflow MTX_CONVERSION {
             mtx_matrices
         )
 
-        // Generate the t2g file to enrich the 10x files with gene names
-        KALLISTOBUSTOOLS_REF( genome_fasta, gtf, 'standard' )
-        txp2gene = KALLISTOBUSTOOLS_REF.out.t2g.collect()
+        if (output_10x) {
+            // Generate the t2g file to enrich the 10x files with gene names
+            KALLISTOBUSTOOLS_REF( genome_fasta, gtf, 'standard' )
+            txp2gene = KALLISTOBUSTOOLS_REF.out.t2g.collect()
 
-        //
-        // Convert h5ad files to 10x counts format
-        //
-        H5AD_TO_10X (
-            MTX_TO_H5AD.out.h5ad, // gather all sample-specific files
-            txp2gene
-        )
+            //
+            // Convert h5ad files to 10x counts format
+            //
+            H5AD_TO_10X (
+                MTX_TO_H5AD.out.h5ad, // gather all sample-specific files
+                txp2gene
+            )
+        }
 
         //
         // Concat sample-specific h5ad in one

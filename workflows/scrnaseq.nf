@@ -71,12 +71,14 @@ ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
 
 // general input and params
 ch_input = file(params.input)
+ch_output_10x = params.output_10x
 ch_genome_fasta = params.fasta ? file(params.fasta) : []
 ch_gtf = params.gtf ? file(params.gtf) : []
 ch_transcript_fasta = params.transcript_fasta ? file(params.transcript_fasta): []
 ch_txp2gene = params.txp2gene ? file(params.txp2gene) : []
 ch_multiqc_alevin = Channel.empty()
 ch_multiqc_star = Channel.empty()
+
 if (params.barcode_whitelist) {
     ch_barcode_whitelist = file(params.barcode_whitelist)
 } else if (params.protocol.contains("10X")) {
@@ -188,7 +190,8 @@ workflow SCRNASEQ {
         ch_input,
         ch_gtf,
         ch_txp2gene,
-        ch_genome_fasta
+        ch_genome_fasta,
+        ch_output_10x,
 
     )
 

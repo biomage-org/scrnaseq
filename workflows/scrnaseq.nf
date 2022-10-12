@@ -136,18 +136,6 @@ workflow SCRNASEQ {
         )
         ch_versions = ch_versions.mix(KALLISTO_BUSTOOLS.out.ch_versions)
         ch_mtx_matrices = ch_mtx_matrices.mix(KALLISTO_BUSTOOLS.out.counts)
-
-        CELLENICS_PREPROCESS(
-            KALLISTO_BUSTOOLS.out.t2g,
-            KALLISTO_BUSTOOLS.out.matrix,
-            KALLISTO_BUSTOOLS.out.features,
-            KALLISTO_BUSTOOLS.out.barcodes
-        )
-
-        sample = CELLENICS_PREPROCESS.out.sample
-
-        CELLENICS_UPLOAD(params.email, params.password, sample) |
-        view
     }
 
     // Run salmon alevin pipeline
@@ -203,8 +191,9 @@ workflow SCRNASEQ {
         ch_gtf,
         ch_txp2gene,
         ch_genome_fasta
-
     )
+
+    CELLENICS_UPLOAD(params.email, params.password, MTX_CONVERSION.out.sample)
 
     //Add Versions from MTX Conversion workflow too
     ch_versions.mix(MTX_CONVERSION.out.ch_versions)

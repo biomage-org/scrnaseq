@@ -62,5 +62,6 @@ workflow MTX_CONVERSION {
 
     emit:
     ch_versions
+    sample = H5AD_TO_10X.out.sample
 
 }

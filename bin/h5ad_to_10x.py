@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import scanpy as sc
 import pandas as pd
-import scipy
+from scipy import io
 import os
 import argparse
 
@@ -22,7 +22,7 @@ def h5ad_to_10x(
 
     features.to_csv(os.path.join(out, "features.tsv" ),   sep = "\t", index = False, header=None)
     pd.DataFrame(ad.obs.index).to_csv(os.path.join(out, "barcodes.tsv"), sep = "\t", index = False, header=None)
-    scipy.io.mmwrite(os.path.join(out, "matrix.mtx"), ad.X.T, field='integer')
+    io.mmwrite(os.path.join(out, "matrix.mtx"), ad.X.T, field='integer')
 
     print("Wrote features.tsv, barcodes.tsv, and matrix.mtx files to {}".format(args["out"]))
 

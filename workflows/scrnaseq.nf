@@ -197,7 +197,7 @@ workflow SCRNASEQ {
 
     )
 
-    CELLENICS_UPLOAD(params.email, params.password, MTX_CONVERSION.out.sample)
+    CELLENICS_UPLOAD(params.email, params.password, MTX_CONVERSION.out.sample.collect())
 
     //Add Versions from MTX Conversion workflow too
     ch_versions.mix(MTX_CONVERSION.out.ch_versions)

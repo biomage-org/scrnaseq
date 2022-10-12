@@ -1,10 +1,10 @@
 process CELLENICS_UPLOAD {
-    // container 'biomage/programmatic-interface:0.0.1'
+    container 'biomage/programmatic-interface:0.0.3'
 
     input:
     val email
     val password
-    path sample
+    path samples
 
     output:
     stdout
@@ -12,10 +12,11 @@ process CELLENICS_UPLOAD {
     script:
     """
     #!/usr/bin/env python
-    import cellenics_api
+    import biomage_programmatic_interface as bpi
 
-    connection = cellenics_api.Connection('$email', '$password')
+    connection = bpi.Connection('$email', '$password')
     experiment_id = connection.create_experiment()
-    connection.upload_samples(experiment_id, '$sample')
+    for sample in '$samples'.split():
+        connection.upload_samples(experiment_id, sample)
     """
 }

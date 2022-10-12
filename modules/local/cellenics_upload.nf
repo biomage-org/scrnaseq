@@ -1,4 +1,6 @@
 process CELLENICS_UPLOAD {
+    // container 'biomage/programmatic-interface:0.0.1'
+
     input:
     val email
     val password

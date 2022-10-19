@@ -1,5 +1,5 @@
 process CELLENICS_UPLOAD {
-    // container 'biomage/programmatic-interface:0.0.5'
+    container 'biomage/programmatic-interface:0.0.5'
 
     input:
     val email

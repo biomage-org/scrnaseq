@@ -81,6 +81,13 @@ ch_txp2gene = params.txp2gene ? file(params.txp2gene) : []
 ch_multiqc_alevin = Channel.empty()
 ch_multiqc_star = Channel.empty()
 
+// biomage inputs
+if (params.biomage_email) {
+    ch_biomage_email = params.biomage_email
+    ch_biomage_password = params.biomage_password
+    ch_output_10x = true
+}
+
 if (params.barcode_whitelist) {
     ch_barcode_whitelist = file(params.barcode_whitelist)
 } else if (params.protocol.contains("10X")) {
@@ -197,8 +204,10 @@ workflow SCRNASEQ {
 
     )
 
-    CELLENICS_UPLOAD(params.email, params.password, MTX_CONVERSION.out.sample.collect())
-
+    if (params.biomage_email) {
+        CELLENICS_UPLOAD(ch_biomage_email, ch_biomage_password, MTX_CONVERSION.out.sample.collect())
+    }
+    
     //Add Versions from MTX Conversion workflow too
     ch_versions.mix(MTX_CONVERSION.out.ch_versions)
 

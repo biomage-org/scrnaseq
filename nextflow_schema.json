@@ -248,6 +248,9 @@
             "type": "object",
             "description": "Upload results into Biomage to view analysis of your data",
             "default": "",
+            "required": [
+                "biomage_instance"
+            ],
             "properties": {
                 "biomage_email": {
                     "type": "string",
@@ -268,7 +271,8 @@
                         "biomage",
                         "staging"
                     ]
-                }
+                },
+                
             },
             "fa_icon": "fas fa-bacterium"
         },

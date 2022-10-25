@@ -263,7 +263,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-external-link-alt",
                     "description": "Instance of Cellenics",
-                    "default": "https://api.scp.biomage.net/"
+                    "default": "biomage"
                 }
             },
             "fa_icon": "fas fa-bacterium",

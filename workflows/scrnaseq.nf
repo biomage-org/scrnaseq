@@ -82,11 +82,10 @@ ch_multiqc_alevin = Channel.empty()
 ch_multiqc_star = Channel.empty()
 
 // biomage inputs
-if (params.biomage_email) {
-    ch_biomage_email = params.biomage_email
-    ch_biomage_password = params.biomage_password
-    ch_output_10x = true
-}
+ch_biomage_email = params.biomage_email ? params.biomage_email : False
+ch_biomage_password = params.biomage_password ? params.biomage_password : False
+ch_biomage_instance = params.bioamge_instance 
+ch_output_10x = ch_biomage_email ? true : ch_output_10x
 
 if (params.barcode_whitelist) {
     ch_barcode_whitelist = file(params.barcode_whitelist)
@@ -204,8 +203,8 @@ workflow SCRNASEQ {
 
     )
 
-    if (params.biomage_email) {
-        CELLENICS_UPLOAD(ch_biomage_email, ch_biomage_password, MTX_CONVERSION.out.sample.collect())
+    if (ch_biomage_email) {
+        CELLENICS_UPLOAD(ch_biomage_email, ch_biomage_password, ch_biomage_instance, MTX_CONVERSION.out.sample.collect())
     }
     
     //Add Versions from MTX Conversion workflow too

@@ -258,9 +258,18 @@
                     "type": "string",
                     "fa_icon": "fas fa-unlock",
                     "description": "Password in Biomage"
+                },
+                "bioamge_instance": {
+                    "type": "string",
+                    "fa_icon": "fas fa-external-link-alt",
+                    "description": "Instance of Cellenics",
+                    "default": "https://api.scp.biomage.net/"
                 }
             },
-            "fa_icon": "fas fa-bacterium"
+            "fa_icon": "fas fa-bacterium",
+            "required": [
+                "bioamge_instance"
+            ]
         },
         "institutional_config_options": {
             "title": "Institutional config options",

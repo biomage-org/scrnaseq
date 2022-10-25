@@ -203,8 +203,7 @@ workflow SCRNASEQ {
     )
 
     if (ch_biomage_email) {
-        view('hi')
-        CELLENICS_UPLOAD(ch_biomage_email, ch_biomage_password, ch_biomage_instance, MTX_CONVERSION.out.sample.collect())
+        CELLENICS_UPLOAD(ch_biomage_email, ch_biomage_password, ch_biomage_instance, MTX_CONVERSION.out.ch_sample.collect())
     }
     
     //Add Versions from MTX Conversion workflow too

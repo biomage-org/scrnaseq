@@ -38,15 +38,14 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK       } from '../subworkflows/local/input_check'
-include { FASTQC_CHECK } from '../subworkflows/local/fastqc'
+include { FASTQC_CHECK      } from '../subworkflows/local/fastqc'
 include { KALLISTO_BUSTOOLS } from '../subworkflows/local/kallisto_bustools'
 include { SCRNASEQ_ALEVIN   } from '../subworkflows/local/alevin'
 include { STARSOLO          } from '../subworkflows/local/starsolo'
 include { CELLRANGER_ALIGN  } from "../subworkflows/local/align_cellranger"
 include { MTX_CONVERSION    } from "../subworkflows/local/mtx_conversion"
 include { GTF_GENE_FILTER   } from '../modules/local/gtf_gene_filter'
-include { CELLENICS_PREPROCESS } from '../modules/local/cellenics_preprocess'
-include { CELLENICS_UPLOAD } from '../modules/local/cellenics_upload'
+include { CELLENICS_UPLOAD  } from '../modules/local/cellenics_upload'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -82,9 +81,9 @@ ch_multiqc_alevin = Channel.empty()
 ch_multiqc_star = Channel.empty()
 
 // biomage inputs
-ch_biomage_email = params.biomage_email ? params.biomage_email : False
-ch_biomage_password = params.biomage_password ? params.biomage_password : False
-ch_biomage_instance = params.bioamge_instance 
+ch_biomage_email = params.biomage_email
+ch_biomage_password = params.biomage_password 
+ch_biomage_instance = params.biomage_instance
 ch_output_10x = ch_biomage_email ? true : ch_output_10x
 
 if (params.barcode_whitelist) {
@@ -204,6 +203,7 @@ workflow SCRNASEQ {
     )
 
     if (ch_biomage_email) {
+        view('hi')
         CELLENICS_UPLOAD(ch_biomage_email, ch_biomage_password, ch_biomage_instance, MTX_CONVERSION.out.sample.collect())
     }
     

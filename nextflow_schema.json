@@ -259,17 +259,18 @@
                     "fa_icon": "fas fa-unlock",
                     "description": "Password in Biomage"
                 },
-                "bioamge_instance": {
+                "biomage_instance": {
                     "type": "string",
                     "fa_icon": "fas fa-external-link-alt",
                     "description": "Instance of Cellenics",
-                    "default": "biomage"
+                    "default": "biomage",
+                    "enum": [
+                        "biomage",
+                        "staging"
+                    ]
                 }
             },
-            "fa_icon": "fas fa-bacterium",
-            "required": [
-                "bioamge_instance"
-            ]
+            "fa_icon": "fas fa-bacterium"
         },
         "institutional_config_options": {
             "title": "Institutional config options",

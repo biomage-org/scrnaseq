@@ -1,6 +1,6 @@
 process H5AD_TO_10X {
     label 'process_low'
-    container 'biomage/programmatic-interface:0.0.5'
+    container 'biomage/programmatic-interface:0.0.9'
     
     input:
     path h5ad_file

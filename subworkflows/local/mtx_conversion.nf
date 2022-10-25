@@ -16,7 +16,6 @@ workflow MTX_CONVERSION {
     genome_fasta
     output_10x
 
-
     main:
         ch_versions = Channel.empty()
         // Convert matrix do h5ad
@@ -25,6 +24,8 @@ workflow MTX_CONVERSION {
         MTX_TO_H5AD (
             mtx_matrices
         )
+
+        ch_sample = Channel.empty()
 
         if (output_10x) {
             // Generate the t2g file to enrich the 10x files with gene names
@@ -38,6 +39,8 @@ workflow MTX_CONVERSION {
                 MTX_TO_H5AD.out.h5ad, // gather all sample-specific files
                 txp2gene
             )
+
+            ch_sample = H5AD_TO_10X.out.sample
         }
 
         //
@@ -62,6 +65,5 @@ workflow MTX_CONVERSION {
 
     emit:
     ch_versions
-    sample = H5AD_TO_10X.out.sample
-
+    ch_sample 
 }

@@ -248,9 +248,6 @@
             "type": "object",
             "description": "Upload results into Biomage to view analysis of your data",
             "default": "",
-            "required": [
-                "biomage_instance"
-            ],
             "properties": {
                 "biomage_email": {
                     "type": "string",
@@ -262,15 +259,10 @@
                     "fa_icon": "fas fa-unlock",
                     "description": "Password in Biomage"
                 },
-                "biomage_instance": {
+                "biomage_instance_url": {
                     "type": "string",
                     "fa_icon": "fas fa-external-link-alt",
-                    "description": "Instance of Cellenics",
-                    "default": "biomage",
-                    "enum": [
-                        "biomage",
-                        "staging"
-                    ]
+                    "description": "URL to Biomage Instance (do not include 'https://' in the url)"
                 }
             },
             "fa_icon": "fas fa-bacterium"

@@ -45,7 +45,7 @@ include { STARSOLO          } from '../subworkflows/local/starsolo'
 include { CELLRANGER_ALIGN  } from "../subworkflows/local/align_cellranger"
 include { MTX_CONVERSION    } from "../subworkflows/local/mtx_conversion"
 include { GTF_GENE_FILTER   } from '../modules/local/gtf_gene_filter'
-include { CELLENICS_UPLOAD  } from '../modules/local/cellenics_upload'
+include { BIOMAGE_UPLOAD    } from '../modules/local/biomage_upload'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -83,7 +83,7 @@ ch_multiqc_star = Channel.empty()
 // biomage inputs
 ch_biomage_email = params.biomage_email
 ch_biomage_password = params.biomage_password 
-ch_biomage_instance = params.biomage_instance
+ch_biomage_instance_url = params.biomage_instance_url
 ch_output_10x = ch_biomage_email ? true : ch_output_10x
 
 if (params.barcode_whitelist) {
@@ -203,7 +203,7 @@ workflow SCRNASEQ {
     )
 
     if (ch_biomage_email) {
-        CELLENICS_UPLOAD(ch_biomage_email, ch_biomage_password, ch_biomage_instance, MTX_CONVERSION.out.ch_sample.collect())
+        BIOMAGE_UPLOAD(ch_biomage_email, ch_biomage_password, ch_biomage_instance_url, MTX_CONVERSION.out.ch_sample.collect())
     }
     
     //Add Versions from MTX Conversion workflow too

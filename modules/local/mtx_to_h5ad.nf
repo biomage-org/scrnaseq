@@ -15,7 +15,7 @@ process MTX_TO_H5AD {
 
     output:
     path "${meta.id}/*h5ad", emit: h5ad
-    path "${meta.id}/*", emit: counts
+    path "${meta.id}", emit: counts
 
     when:
     task.ext.when == null || task.ext.when

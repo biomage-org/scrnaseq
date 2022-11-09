@@ -1,11 +1,11 @@
 process BIOMAGE_UPLOAD {
-    container 'biomage/programmatic-interface:0.0.9'
+    container 'biomage/programmatic-interface:0.0.7'
 
     input:
     val email
     val password
     val instance_url
-    path samples
+    path samples 
 
     output:
     stdout

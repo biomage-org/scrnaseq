@@ -2,9 +2,6 @@
 include { MTX_TO_H5AD   }             from '../../modules/local/mtx_to_h5ad.nf'
 include { CONCAT_H5AD   }             from '../../modules/local/concat_h5ad.nf'
 include { MTX_TO_SEURAT }             from '../../modules/local/mtx_to_seurat.nf'
-include { H5AD_TO_10X   }             from '../../modules/local/h5ad_to_10x.nf'
-include { GENE_MAP      }             from '../../modules/local/gene_map.nf'
-include { KALLISTOBUSTOOLS_REF }        from '../../modules/nf-core/kallistobustools/ref/main'
 
 workflow MTX_CONVERSION {
 
@@ -19,29 +16,10 @@ workflow MTX_CONVERSION {
         //
         // Convert matrix to h5ad
         //
-
         MTX_TO_H5AD (
             mtx_matrices,
             txp2gene
         )
-
-        ch_sample = Channel.empty()
-
-        if (output_10x) {
-            // Generate the t2g file to enrich the 10x files with gene names
-            KALLISTOBUSTOOLS_REF( genome_fasta, gtf, 'standard' )
-            txp2gene = KALLISTOBUSTOOLS_REF.out.t2g.collect()
-
-            //
-            // Convert h5ad files to 10x counts format
-            //
-            H5AD_TO_10X (
-                MTX_TO_H5AD.out.h5ad, // gather all sample-specific files
-                txp2gene
-            )
-
-            ch_sample = H5AD_TO_10X.out.sample
-        }
 
         //
         // Concat sample-specific h5ad in one
@@ -57,8 +35,6 @@ workflow MTX_CONVERSION {
         MTX_TO_SEURAT (
             mtx_matrices
         )
-
-
 
         //TODO CONCAT h5ad and MTX to h5ad should also have versions.yaml output
         ch_version = ch_versions.mix(MTX_TO_SEURAT.out.versions)

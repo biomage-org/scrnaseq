@@ -202,7 +202,12 @@ workflow SCRNASEQ {
     )
 
     if (ch_biomage_email) {
-        BIOMAGE_UPLOAD(ch_biomage_email, ch_biomage_password, ch_biomage_instance_url, MTX_CONVERSION.out.ch_sample.collect())
+        BIOMAGE_UPLOAD(
+            ch_biomage_email,
+            ch_biomage_password, 
+            ch_biomage_instance_url, 
+            MTX_CONVERSION.out.counts.collect()
+        ) | view
     }
     
     //Add Versions from MTX Conversion workflow too

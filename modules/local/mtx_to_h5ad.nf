@@ -11,9 +11,11 @@ process MTX_TO_H5AD {
     // inputs from cellranger nf-core module does not come in a single sample dir
     // for each sample, the sub-folders and files come directly in array.
     tuple val(meta), path(inputs)
+    path txp2gene
 
     output:
-    path "*.h5ad", emit: h5ad
+    path "${meta.id}/*h5ad", emit: h5ad
+    path "${meta.id}/*", emit: counts
 
     when:
     task.ext.when == null || task.ext.when
@@ -43,7 +45,7 @@ process MTX_TO_H5AD {
     cellranger_mtx_to_h5ad.py \\
         --mtx filtered_feature_bc_matrix.h5 \\
         --sample ${meta.id} \\
-        --out ${meta.id}_matrix.h5ad
+        --out ${meta.id}/${meta.id}_matrix.h5ad
     """
 
     else if (params.aligner == 'kallisto' && params.kb_workflow != 'standard')
@@ -56,7 +58,8 @@ process MTX_TO_H5AD {
             --mtx *count/counts_unfiltered/\${input_type}.mtx \\
             --barcode *count/counts_unfiltered/\${input_type}.barcodes.txt \\
             --feature *count/counts_unfiltered/\${input_type}.genes.txt \\
-            --out ${meta.id}_\${input_type}_matrix.h5ad ;
+            --txp2gene ${txp2gene} \\
+            --out ${meta.id}/${meta.id}_\${input_type}_matrix.h5ad ;
     done
     """
 
@@ -69,11 +72,12 @@ process MTX_TO_H5AD {
         --mtx $mtx_matrix \\
         --barcode $barcodes_tsv \\
         --feature $features_tsv \\
-        --out ${meta.id}_matrix.h5ad
+        --txp2gene ${txp2gene} \\
+        --out ${meta.id}/${meta.id}_matrix.h5ad
     """
 
     stub:
     """
-    touch ${meta.id}_matrix.h5ad
+    touch ${meta.id}/matrix.h5ad
     """
 }

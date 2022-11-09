@@ -143,6 +143,7 @@ workflow SCRNASEQ {
         )
         ch_versions = ch_versions.mix(KALLISTO_BUSTOOLS.out.ch_versions)
         ch_mtx_matrices = ch_mtx_matrices.mix(KALLISTO_BUSTOOLS.out.counts)
+        ch_txp2gene = KALLISTO_BUSTOOLS.out.txp2gene
     }
 
     // Run salmon alevin pipeline
@@ -195,11 +196,9 @@ workflow SCRNASEQ {
     MTX_CONVERSION (
         ch_mtx_matrices,
         ch_input,
-        ch_gtf,
-        ch_txp2gene,
-        ch_genome_fasta,
-        ch_output_10x,
-
+        ch_txp2gene
+        // ch_genome_fasta,
+        // ch_filter_gtf
     )
 
     if (ch_biomage_email) {

@@ -11,18 +11,18 @@ workflow MTX_CONVERSION {
     take:
     mtx_matrices
     samplesheet
-    gtf
     txp2gene
-    genome_fasta
-    output_10x
 
     main:
         ch_versions = Channel.empty()
-        // Convert matrix do h5ad
+
+        //
+        // Convert matrix to h5ad
         //
 
         MTX_TO_H5AD (
-            mtx_matrices
+            mtx_matrices,
+            txp2gene
         )
 
         ch_sample = Channel.empty()
@@ -65,5 +65,6 @@ workflow MTX_CONVERSION {
 
     emit:
     ch_versions
-    ch_sample 
+    counts = MTX_TO_H5AD.out.counts
+
 }

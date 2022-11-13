@@ -11,3 +11,6 @@ reports/
 testme.sh
 params.json
 execution_command.txt
+null/
+run.sh
+test/

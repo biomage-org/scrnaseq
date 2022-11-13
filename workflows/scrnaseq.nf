@@ -72,7 +72,6 @@ ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
 
 // general input and params
 ch_input = file(params.input)
-ch_output_10x = params.output_10x
 ch_genome_fasta = params.fasta ? file(params.fasta) : []
 ch_gtf = params.gtf ? file(params.gtf) : []
 ch_transcript_fasta = params.transcript_fasta ? file(params.transcript_fasta): []
@@ -84,7 +83,6 @@ ch_multiqc_star = Channel.empty()
 ch_biomage_email = params.biomage_email
 ch_biomage_password = params.biomage_password 
 ch_biomage_instance_url = params.biomage_instance_url
-ch_output_10x = ch_biomage_email ? true : ch_output_10x
 
 if (params.barcode_whitelist) {
     ch_barcode_whitelist = file(params.barcode_whitelist)

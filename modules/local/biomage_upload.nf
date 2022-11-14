@@ -1,4 +1,5 @@
 process BIOMAGE_UPLOAD {
+    label 'process_low'
     container 'biomage/programmatic-interface:0.0.7'
 
     input:
@@ -8,7 +9,10 @@ process BIOMAGE_UPLOAD {
     path samples 
 
     output:
-    stdout
+    stdout, emit: logs
+    
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     """

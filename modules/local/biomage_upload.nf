@@ -9,7 +9,7 @@ process BIOMAGE_UPLOAD {
     path samples 
 
     output:
-    stdout, emit: logs
+    stdout
     
     when:
     task.ext.when == null || task.ext.when
@@ -19,9 +19,12 @@ process BIOMAGE_UPLOAD {
     #!/usr/bin/env python
     import biomage_programmatic_interface as bpi
 
-    connection = bpi.Connection('$email', '$password', '$instance_url')
+    connection = bpi.Connection('$email', '$password', '$instance_url', verbose=False)
     experiment_id = connection.create_experiment()
     for sample in '$samples'.split():
         connection.upload_samples(experiment_id, sample)
+
+    print(f"Project {experiment_id} successfuly created!")
+    print(f'You can view it at https://$instance_url/')
     """
 }

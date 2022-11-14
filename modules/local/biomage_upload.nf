@@ -9,7 +9,7 @@ process BIOMAGE_UPLOAD {
     path samples 
 
     output:
-    stdout, emit: logs
+    stdout
     
     when:
     task.ext.when == null || task.ext.when

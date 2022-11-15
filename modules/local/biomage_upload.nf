@@ -6,11 +6,11 @@ process BIOMAGE_UPLOAD {
     val email
     val password
     val instance_url
-    path samples 
+    path samples
 
     output:
     stdout
-    
+
     when:
     task.ext.when == null || task.ext.when
 

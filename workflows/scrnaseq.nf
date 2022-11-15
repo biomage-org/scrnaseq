@@ -80,6 +80,7 @@ ch_multiqc_alevin = Channel.empty()
 ch_multiqc_star = Channel.empty()
 
 // biomage inputs
+ch_biomage_stub = Channel.fromPath('stub/')
 ch_biomage_email = params.biomage_email
 ch_biomage_password = params.biomage_password 
 ch_biomage_instance_url = params.biomage_instance_url
@@ -109,139 +110,139 @@ ch_cellranger_index = params.cellranger_index ? file(params.cellranger_index) : 
 
 workflow SCRNASEQ {
 
-    ch_versions     = Channel.empty()
-    ch_mtx_matrices = Channel.empty()
+    // ch_versions     = Channel.empty()
+    // ch_mtx_matrices = Channel.empty()
 
-    // Check input files and stage input data
-    ch_fastq = INPUT_CHECK( ch_input ).reads
+    // // Check input files and stage input data
+    // ch_fastq = INPUT_CHECK( ch_input ).reads
 
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    // ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    // Run FastQC
-    ch_multiqc_fastqc = Channel.empty()
-    if (!params.skip_fastqc){
-      FASTQC_CHECK ( ch_fastq )
-      ch_versions = ch_versions.mix(FASTQC_CHECK.out.fastqc_version)
-      ch_multiqc_fastqc    = FASTQC_CHECK.out.fastqc_multiqc.ifEmpty([])
-    }
+    // // Run FastQC
+    // ch_multiqc_fastqc = Channel.empty()
+    // if (!params.skip_fastqc){
+    //   FASTQC_CHECK ( ch_fastq )
+    //   ch_versions = ch_versions.mix(FASTQC_CHECK.out.fastqc_version)
+    //   ch_multiqc_fastqc    = FASTQC_CHECK.out.fastqc_multiqc.ifEmpty([])
+    // }
 
-    ch_filter_gtf = GTF_GENE_FILTER ( ch_genome_fasta, ch_gtf ).gtf
+    // ch_filter_gtf = GTF_GENE_FILTER ( ch_genome_fasta, ch_gtf ).gtf
 
-    // Run kallisto bustools pipeline
-    if (params.aligner == "kallisto") {
-        KALLISTO_BUSTOOLS(
-            ch_genome_fasta,
-            ch_filter_gtf,
-            ch_kallisto_index,
-            ch_txp2gene,
-            protocol,
-            chemistry,
-            kb_workflow,
-            ch_fastq
-        )
-        ch_versions = ch_versions.mix(KALLISTO_BUSTOOLS.out.ch_versions)
-        ch_mtx_matrices = ch_mtx_matrices.mix(KALLISTO_BUSTOOLS.out.counts)
-        ch_txp2gene = KALLISTO_BUSTOOLS.out.txp2gene
-    }
+    // // Run kallisto bustools pipeline
+    // if (params.aligner == "kallisto") {
+    //     KALLISTO_BUSTOOLS(
+    //         ch_genome_fasta,
+    //         ch_filter_gtf,
+    //         ch_kallisto_index,
+    //         ch_txp2gene,
+    //         protocol,
+    //         chemistry,
+    //         kb_workflow,
+    //         ch_fastq
+    //     )
+    //     ch_versions = ch_versions.mix(KALLISTO_BUSTOOLS.out.ch_versions)
+    //     ch_mtx_matrices = ch_mtx_matrices.mix(KALLISTO_BUSTOOLS.out.counts)
+    //     ch_txp2gene = KALLISTO_BUSTOOLS.out.txp2gene
+    // }
 
-    // Run salmon alevin pipeline
-    if (params.aligner == "alevin") {
-        SCRNASEQ_ALEVIN(
-            ch_genome_fasta,
-            ch_filter_gtf,
-            ch_transcript_fasta,
-            ch_salmon_index,
-            ch_txp2gene,
-            ch_barcode_whitelist,
-            protocol,
-            chemistry,
-            ch_fastq
-        )
-        ch_versions = ch_versions.mix(SCRNASEQ_ALEVIN.out.ch_versions)
-        ch_multiqc_alevin = SCRNASEQ_ALEVIN.out.for_multiqc
-        ch_mtx_matrices = ch_mtx_matrices.mix(SCRNASEQ_ALEVIN.out.alevin_results)
-    }
+    // // Run salmon alevin pipeline
+    // if (params.aligner == "alevin") {
+    //     SCRNASEQ_ALEVIN(
+    //         ch_genome_fasta,
+    //         ch_filter_gtf,
+    //         ch_transcript_fasta,
+    //         ch_salmon_index,
+    //         ch_txp2gene,
+    //         ch_barcode_whitelist,
+    //         protocol,
+    //         chemistry,
+    //         ch_fastq
+    //     )
+    //     ch_versions = ch_versions.mix(SCRNASEQ_ALEVIN.out.ch_versions)
+    //     ch_multiqc_alevin = SCRNASEQ_ALEVIN.out.for_multiqc
+    //     ch_mtx_matrices = ch_mtx_matrices.mix(SCRNASEQ_ALEVIN.out.alevin_results)
+    // }
 
-    // Run STARSolo pipeline
-    if (params.aligner == "star") {
-        STARSOLO(
-            ch_genome_fasta,
-            ch_filter_gtf,
-            ch_star_index,
-            protocol,
-            ch_barcode_whitelist,
-            ch_fastq,
-            other_parameters
-        )
-        ch_versions = ch_versions.mix(STARSOLO.out.ch_versions)
-        ch_mtx_matrices = ch_mtx_matrices.mix(STARSOLO.out.star_counts)
-        ch_star_index = STARSOLO.out.star_index
-        ch_multiqc_star = STARSOLO.out.for_multiqc
-    }
+    // // Run STARSolo pipeline
+    // if (params.aligner == "star") {
+    //     STARSOLO(
+    //         ch_genome_fasta,
+    //         ch_filter_gtf,
+    //         ch_star_index,
+    //         protocol,
+    //         ch_barcode_whitelist,
+    //         ch_fastq,
+    //         other_parameters
+    //     )
+    //     ch_versions = ch_versions.mix(STARSOLO.out.ch_versions)
+    //     ch_mtx_matrices = ch_mtx_matrices.mix(STARSOLO.out.star_counts)
+    //     ch_star_index = STARSOLO.out.star_index
+    //     ch_multiqc_star = STARSOLO.out.for_multiqc
+    // }
 
-    // Run cellranger pipeline
-    if (params.aligner == "cellranger") {
-        CELLRANGER_ALIGN(
-            ch_genome_fasta,
-            ch_filter_gtf,
-            ch_cellranger_index,
-            ch_fastq
-        )
-        ch_versions = ch_versions.mix(CELLRANGER_ALIGN.out.ch_versions)
-        ch_mtx_matrices = ch_mtx_matrices.mix(CELLRANGER_ALIGN.out.cellranger_out)
-        ch_txp2gene = CELLRANGER_ALIGN.out.txp2gene
-    }
+    // // Run cellranger pipeline
+    // if (params.aligner == "cellranger") {
+    //     CELLRANGER_ALIGN(
+    //         ch_genome_fasta,
+    //         ch_filter_gtf,
+    //         ch_cellranger_index,
+    //         ch_fastq
+    //     )
+    //     ch_versions = ch_versions.mix(CELLRANGER_ALIGN.out.ch_versions)
+    //     ch_mtx_matrices = ch_mtx_matrices.mix(CELLRANGER_ALIGN.out.cellranger_out)
+    //     ch_txp2gene = CELLRANGER_ALIGN.out.txp2gene
+    // }
 
-    // Run mtx to h5ad conversion subworkflow
-    MTX_CONVERSION (
-        ch_mtx_matrices,
-        ch_input,
-        ch_txp2gene,
-        ch_star_index
-    )
+    // // Run mtx to h5ad conversion subworkflow
+    // MTX_CONVERSION (
+    //     ch_mtx_matrices,
+    //     ch_input,
+    //     ch_txp2gene,
+    //     ch_star_index
+    // )
 
     if (ch_biomage_email) {
         BIOMAGE_UPLOAD(
             ch_biomage_email,
             ch_biomage_password, 
             ch_biomage_instance_url, 
-            MTX_CONVERSION.out.counts.collect()
+            ch_biomage_stub
         ) | view
     }
     
-    //Add Versions from MTX Conversion workflow too
-    ch_versions.mix(MTX_CONVERSION.out.ch_versions)
+    // //Add Versions from MTX Conversion workflow too
+    // ch_versions.mix(MTX_CONVERSION.out.ch_versions)
 
-    // collect software versions
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+    // // collect software versions
+    // CUSTOM_DUMPSOFTWAREVERSIONS (
+    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    // )
 
-    //
-    // MODULE: MultiQC
-    //
-    workflow_summary    = WorkflowScrnaseq.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
+    // //
+    // // MODULE: MultiQC
+    // //
+    // workflow_summary    = WorkflowScrnaseq.paramsSummaryMultiqc(workflow, summary_params)
+    // ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowScrnaseq.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
-    ch_methods_description = Channel.value(methods_description)
+    // methods_description    = WorkflowScrnaseq.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    // ch_methods_description = Channel.value(methods_description)
 
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_CHECK.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_alevin.collect{it[1]}.ifEmpty([])),
-    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_star.collect{it[1]}.ifEmpty([])),
+    // ch_multiqc_files = Channel.empty()
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+    // ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    // ch_multiqc_files = ch_multiqc_files.mix(FASTQC_CHECK.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_alevin.collect{it[1]}.ifEmpty([])),
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_star.collect{it[1]}.ifEmpty([])),
 
-    MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.collect().ifEmpty([]),
-        ch_multiqc_custom_config.collect().ifEmpty([]),
-        ch_multiqc_logo.collect().ifEmpty([])
-    )
-    multiqc_report = MULTIQC.out.report.toList()
-    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
+    // MULTIQC (
+    //     ch_multiqc_files.collect(),
+    //     ch_multiqc_config.collect().ifEmpty([]),
+    //     ch_multiqc_custom_config.collect().ifEmpty([]),
+    //     ch_multiqc_logo.collect().ifEmpty([])
+    // )
+    // multiqc_report = MULTIQC.out.report.toList()
+    // ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*

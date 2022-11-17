@@ -56,7 +56,7 @@ include { BIOMAGE_UPLOAD    } from '../modules/local/biomage_upload'
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { MULTIQC } from "../modules/nf-core/multiqc/main"
+include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -102,6 +102,7 @@ ch_salmon_index = params.salmon_index ? file(params.salmon_index) : []
 
 //star params
 ch_star_index = params.star_index ? file(params.star_index) : []
+star_feature = params.star_feature
 
 //cellranger params
 ch_cellranger_index = params.cellranger_index ? file(params.cellranger_index) : []
@@ -119,10 +120,12 @@ workflow SCRNASEQ {
 
     // Run FastQC
     ch_multiqc_fastqc = Channel.empty()
-    if (!params.skip_fastqc){
-      FASTQC_CHECK ( ch_fastq )
-      ch_versions = ch_versions.mix(FASTQC_CHECK.out.fastqc_version)
-      ch_multiqc_fastqc    = FASTQC_CHECK.out.fastqc_multiqc.ifEmpty([])
+    if (!params.skip_fastqc) {
+        FASTQC_CHECK ( ch_fastq )
+        ch_versions       = ch_versions.mix(FASTQC_CHECK.out.fastqc_version)
+        ch_multiqc_fastqc = FASTQC_CHECK.out.fastqc_zip
+    } else {
+        ch_multiqc_fastqc = Channel.empty()
     }
 
     ch_filter_gtf = GTF_GENE_FILTER ( ch_genome_fasta, ch_gtf ).gtf
@@ -171,6 +174,7 @@ workflow SCRNASEQ {
             protocol,
             ch_barcode_whitelist,
             ch_fastq,
+            star_feature,
             other_parameters
         )
         ch_versions = ch_versions.mix(STARSOLO.out.ch_versions)
@@ -189,7 +193,7 @@ workflow SCRNASEQ {
         )
         ch_versions = ch_versions.mix(CELLRANGER_ALIGN.out.ch_versions)
         ch_mtx_matrices = ch_mtx_matrices.mix(CELLRANGER_ALIGN.out.cellranger_out)
-        ch_txp2gene = CELLRANGER_ALIGN.out.txp2gene
+        ch_star_index = CELLRANGER_ALIGN.out.star_index
     }
 
     // Run mtx to h5ad conversion subworkflow
@@ -230,7 +234,7 @@ workflow SCRNASEQ {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_CHECK.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_fastqc.collect{it[1]}.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_alevin.collect{it[1]}.ifEmpty([])),
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_star.collect{it[1]}.ifEmpty([])),
 

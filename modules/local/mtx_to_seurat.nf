@@ -67,6 +67,8 @@ process MTX_TO_SEURAT {
 
     stub:
     """
+    mkdir ${meta.id}
     touch ${meta.id}/${meta.id}_matrix.rds
+    touch versions.yml
     """
 }

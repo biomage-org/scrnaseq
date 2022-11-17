@@ -229,7 +229,7 @@
         "biomage_upload": {
             "title": "Biomage Upload",
             "type": "object",
-            "description": "Upload results into Biomage to view analysis of your data",
+            "description": "Upload results into Biomage to view plots and tables of your data. Create an account in https://scp.biomage.net and input your credentials below. The results will be automatically uploaded to Biomage.",
             "default": "",
             "properties": {
                 "biomage_email": {

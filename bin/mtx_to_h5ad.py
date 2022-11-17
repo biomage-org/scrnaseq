@@ -7,9 +7,6 @@ from scipy import io
 from anndata import AnnData
 
 
-<<<<<<< HEAD
-def mtx_to_adata(
-=======
 def _10x_h5_to_adata(mtx_h5: str, sample: str):
     adata = sc.read_10x_h5(mtx_h5)
     adata.var["gene_symbols"] = adata.var_names
@@ -23,7 +20,6 @@ def _10x_h5_to_adata(mtx_h5: str, sample: str):
 
 
 def _mtx_to_adata(
->>>>>>> cellenics-integration
     mtx_file: str,
     barcode_file: str,
     feature_file: str,
@@ -40,8 +36,6 @@ def _mtx_to_adata(
     adata.var_names = pd.read_csv(feature_file, header=None, sep="\t")[0].values
     adata.obs["sample"] = sample
 
-<<<<<<< HEAD
-=======
     return adata
 
 
@@ -78,18 +72,13 @@ def input_to_adata(
         t2g = t2g.drop_duplicates(subset="gene_id").set_index("gene_id")
         adata.var["gene_symbol"] = t2g["gene_symbol"]
 
->>>>>>> cellenics-integration
     return adata
 
 
 def write_counts(
     adata: AnnData,
     out: str,
-<<<<<<< HEAD
-    verbose: bool = True,
-=======
     verbose: bool = False,
->>>>>>> cellenics-integration
 ):
 
     pd.DataFrame(adata.obs.index).to_csv(os.path.join(out, "barcodes.tsv"), sep="\t", index=False, header=None)
@@ -119,10 +108,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--sample", dest="sample", help="Sample name")
     parser.add_argument("-o", "--out", dest="out", help="Output path.")
     parser.add_argument("-a", "--aligner", dest="aligner", help="Which aligner has been used?")
-<<<<<<< HEAD
-=======
     parser.add_argument("--task_process", dest="task_process", help="Task process name.")
->>>>>>> cellenics-integration
     parser.add_argument("--txp2gene", dest="txp2gene", help="Transcript to gene (t2g) file.", nargs="?", const="")
     parser.add_argument(
         "--star_index", dest="star_index", help="Star index folder containing geneInfo.tab.", nargs="?", const=""
@@ -133,13 +119,6 @@ if __name__ == "__main__":
     # create the directory with the sample name
     os.makedirs(os.path.dirname(args["out"]), exist_ok=True)
 
-<<<<<<< HEAD
-    adata = mtx_to_adata(
-        args["mtx"], args["barcode"], args["feature"], args["sample"], args["aligner"], verbose=args["verbose"]
-    )
-
-    write_counts(adata, args["txp2gene"], args["star_index"], args["sample"], verbose=args["verbose"])
-=======
     adata = input_to_adata(
         input_data=args["input_data"],
         barcode_file=args["barcode"],
@@ -152,7 +131,6 @@ if __name__ == "__main__":
     )
 
     write_counts(adata=adata, out=args["sample"], verbose=args["verbose"])
->>>>>>> cellenics-integration
 
     adata.write_h5ad(args["out"], compression="gzip")
 

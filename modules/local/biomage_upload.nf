@@ -1,6 +1,6 @@
 process BIOMAGE_UPLOAD {
     label 'process_low'
-    container 'biomage/programmatic-interface:0.0.7'
+    container 'biomage/programmatic-interface:0.0.25'
 
     input:
     val email
@@ -20,11 +20,11 @@ process BIOMAGE_UPLOAD {
     import biomage_programmatic_interface as bpi
 
     connection = bpi.Connection('$email', '$password', '$instance_url', verbose=False)
-    experiment_id = connection.create_experiment()
+    experiment = connection.create_experiment()
     for sample in '$samples'.split():
-        connection.upload_samples(experiment_id, sample)
+        experiment.upload_samples(sample)
 
-    print(f"Project {experiment_id} successfuly created!")
+    print(f"Project {experiment.name} successfuly created!")
     print(f'You can view it at https://$instance_url/')
     """
 }

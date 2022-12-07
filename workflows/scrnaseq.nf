@@ -207,21 +207,12 @@ workflow SCRNASEQ {
     if (ch_biomage_email) {
         BIOMAGE_UPLOAD(
             ch_biomage_email,
-<<<<<<< HEAD
-            ch_biomage_password, 
-            ch_biomage_instance_url, 
-            MTX_CONVERSION.out.counts.collect()
-        ) | view
-    }
-    
-=======
             ch_biomage_password,
             ch_biomage_instance_url,
             MTX_CONVERSION.out.counts.collect()
         ) | view
     }
 
->>>>>>> cellenics-integration
     //Add Versions from MTX Conversion workflow too
     ch_versions.mix(MTX_CONVERSION.out.ch_versions)
 

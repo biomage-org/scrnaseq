@@ -229,19 +229,9 @@
         "biomage_upload": {
             "title": "Biomage Upload",
             "type": "object",
-            "description": "Upload results into Biomage to view plots and tables of your data. Create an account in https://scp.biomage.net and input your credentials below. The results will be automatically uploaded to your Biomage account.",
+            "description": "Upload results into Biomage to view plots and tables of your data. Create an account in https://scp.biomage.net and add your credentials as secrets pipeline secrets called BIOMAGE_EMAIL and BIOMAGE_PASSWORD. The results will be automatically uploaded to your Biomage account.",
             "default": "",
             "properties": {
-                "biomage_email": {
-                    "type": "string",
-                    "fa_icon": "fas fa-envelope",
-                    "description": "Email address in Biomage"
-                },
-                "biomage_password": {
-                    "type": "string",
-                    "fa_icon": "fas fa-unlock",
-                    "description": "Password in Biomage"
-                },
                 "biomage_instance_url": {
                     "type": "string",
                     "fa_icon": "fas fa-external-link-alt",

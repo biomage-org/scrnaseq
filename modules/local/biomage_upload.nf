@@ -1,10 +1,10 @@
 process BIOMAGE_UPLOAD {
     label 'process_low'
     container 'biomage/programmatic-interface:0.0.26'
+    secret 'BIOMAGE_EMAIL'
+    secret 'BIOMAGE_PASSWORD'
 
     input:
-    val email
-    val password
     val instance_url
     path samples
 
@@ -18,8 +18,9 @@ process BIOMAGE_UPLOAD {
     """
     #!/usr/bin/env python
     import biomage_programmatic_interface as bpi
+    import os
 
-    connection = bpi.Connection('$email', '$password', '$instance_url', verbose=False)
+    connection = bpi.Connection(os.getenv('BIOMAGE_EMAIL'), os.getenv('BIOMAGE_PASSWORD'), '$instance_url', verbose=False)
     experiment = connection.create_experiment()
     for sample in '$samples'.split():
         experiment.upload_samples(sample)

@@ -1,6 +1,6 @@
 process BIOMAGE_UPLOAD {
     label 'process_low'
-    container 'biomage/programmatic-interface:0.0.26'
+    container 'biomage/programmatic-interface:0.0.28'
     secret 'BIOMAGE_EMAIL'
     secret 'BIOMAGE_PASSWORD'
 

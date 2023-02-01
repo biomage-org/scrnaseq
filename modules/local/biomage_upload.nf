@@ -26,6 +26,6 @@ process BIOMAGE_UPLOAD {
         experiment.upload_samples(sample)
 
     print(f"Project {experiment.name} successfuly created!")
-    print(f'You can view it at https://$instance_url/')
+    print(f'You can view it at https://$instance_url/experiments/{experiment.id}/data-processing')
     """
 }

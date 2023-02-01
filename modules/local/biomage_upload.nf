@@ -1,7 +1,7 @@
 process BIOMAGE_UPLOAD {
     label 'process_low'
     cache false
-    container 'biomage/programmatic-interface:0.0.30'
+    // container 'biomage/programmatic-interface:0.0.30'
     secret 'BIOMAGE_EMAIL'
     secret 'BIOMAGE_PASSWORD'
 
@@ -29,6 +29,6 @@ process BIOMAGE_UPLOAD {
     print(f"Project {experiment.name} successfuly created!")
     experiment.run()
 
-    print(f'You can view it at https://$instance_url/experiments/{experiment.id}/data-processing')
+    print(f'You can view it at:', connection.get_experiment_url(experiment))
     """
 }

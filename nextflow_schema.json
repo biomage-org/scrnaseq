@@ -260,6 +260,11 @@
                     "fa_icon": "fas fa-external-link-alt",
                     "description": "Leave as default if you made your account in https://scp.biomage.net/. Otherwise, provide URL to Biomage Instance (do not include 'https://' in the url)",
                     "default": "scp.biomage.net"
+                },
+                "biomage_verbose": {
+                    "type": "boolean",
+                    "description": "Tick checkbox to display full execution logs",
+                    "fa_icon": "fas fa-align-justify"
                 }
             },
             "fa_icon": "fas fa-bacterium"

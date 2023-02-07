@@ -81,6 +81,7 @@ ch_multiqc_star = Channel.empty()
 
 // biomage inputs
 ch_biomage_instance_url = params.biomage_instance_url
+ch_biomage_verbose = params.biomage_verbose
 
 if (params.barcode_whitelist) {
     ch_barcode_whitelist = file(params.barcode_whitelist)
@@ -205,6 +206,7 @@ workflow SCRNASEQ {
     if (ch_biomage_instance_url) {
         BIOMAGE_UPLOAD(
             ch_biomage_instance_url,
+            ch_biomage_verbose,
             MTX_CONVERSION.out.counts.collect()
         ) | view
     }
